@@ -1338,7 +1338,7 @@ export HTTPS_PROXY="http://127.0.0.1:29754"
     # fallback
     "$VENV_DIR/bin/pip" install scapy aioquic --proxy http://127.0.0.1:29754 || {
         log_error "Failed to install Python packages (scapy, aioquic)"
-        return 1
+        exit 1
     }
 
         }
