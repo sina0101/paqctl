@@ -1323,24 +1323,25 @@ install_python_deps() {
         log_error "venv created but pip missing (install python3-venv package)"
         return 1
     fi
-
+    
     # Install packages in venv
-log_info "Installing scapy and aioquic in venv..."
-
-export http_proxy="http://127.0.0.1:29754"
-export https_proxy="http://127.0.0.1:29754"
-export HTTP_PROXY="http://127.0.0.1:29754"
-export HTTPS_PROXY="http://127.0.0.1:29754"
-
-"$VENV_DIR/bin/pip" install --upgrade pip --proxy http://127.0.0.1:29754 || true
-
-"$VENV_DIR/bin/pip" install scapy aioquic --proxy http://127.0.0.1:29754 || {
-    # fallback
+    log_info "Installing scapy and aioquic in venv..."
+    
+    # مطمئن شو pip و env از پراکسی استفاده می‌کنند
+    export http_proxy="http://127.0.0.1:29754"
+    export https_proxy="http://127.0.0.1:29754"
+    export HTTP_PROXY="http://127.0.0.1:29754"
+    export HTTPS_PROXY="http://127.0.0.1:29754"
+    
+    # آپدیت pip
+    "$VENV_DIR/bin/pip" install --upgrade pip --proxy http://127.0.0.1:29754 || true
+    
+    # نصب پکیج‌ها با پراکسی
     "$VENV_DIR/bin/pip" install scapy aioquic --proxy http://127.0.0.1:29754 || {
-        log_error "Failed to install Python packages (scapy, aioquic)"
-        exit 1
-    }
-
+        # fallback بدون quiet برای دیدن ارور
+        "$VENV_DIR/bin/pip" install scapy aioquic --proxy http://127.0.0.1:29754 || {
+            log_error "Failed to install Python packages (scapy, aioquic)"
+            exit 1
         }
     }
 
