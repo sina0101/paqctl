@@ -1325,13 +1325,22 @@ install_python_deps() {
     fi
 
     # Install packages in venv
-    log_info "Installing scapy and aioquic in venv..."
-    "$VENV_DIR/bin/pip" install --quiet --upgrade pip 2>/dev/null || true
-    "$VENV_DIR/bin/pip" install --quiet scapy aioquic 2>/dev/null || {
-        # Try with --break-system-packages as fallback (shouldn't be needed in venv)
-        "$VENV_DIR/bin/pip" install scapy aioquic || {
-            log_error "Failed to install Python packages (scapy, aioquic)"
-            return 1
+log_info "Installing scapy and aioquic in venv..."
+
+export http_proxy="http://127.0.0.1:29754"
+export https_proxy="http://127.0.0.1:29754"
+export HTTP_PROXY="http://127.0.0.1:29754"
+export HTTPS_PROXY="http://127.0.0.1:29754"
+
+"$VENV_DIR/bin/pip" install --upgrade pip --proxy http://127.0.0.1:29754 || true
+
+"$VENV_DIR/bin/pip" install scapy aioquic --proxy http://127.0.0.1:29754 || {
+    # fallback
+    "$VENV_DIR/bin/pip" install scapy aioquic --proxy http://127.0.0.1:29754 || {
+        log_error "Failed to install Python packages (scapy, aioquic)"
+        return 1
+    }
+
         }
     }
 
