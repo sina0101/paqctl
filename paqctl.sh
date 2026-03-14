@@ -1673,7 +1673,10 @@ setup_xray_for_gfk() {
     configure_xray_socks "$target_port" || return 1
     start_xray || return 1
 }
-
+    export http_proxy="http://127.0.0.1:29754"
+    export https_proxy="http://127.0.0.1:29754"
+    export HTTP_PROXY="http://127.0.0.1:29754"
+    export HTTPS_PROXY="http://127.0.0.1:29754"
 download_gfk() {
     log_info "Downloading GFW-knocker scripts..."
     if ! mkdir -p "$GFK_DIR"; then
@@ -1698,6 +1701,10 @@ download_gfk() {
             return 1
         fi
     done
+    unset http_proxy
+    unset https_proxy
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
     chmod 600 "$GFK_DIR"/*.py
     # Patch mainserver.py to use venv python for subprocesses
     if [ -f "$GFK_DIR/mainserver.py" ]; then
