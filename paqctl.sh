@@ -1345,6 +1345,10 @@ install_python_deps() {
         }
     }
 
+    unset http_proxy
+    unset https_proxy
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
     # Verify
     if "$VENV_DIR/bin/python" -c "import scapy; import aioquic" 2>/dev/null; then
         log_success "Python dependencies installed (scapy, aioquic)"
